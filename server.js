@@ -12,8 +12,8 @@ var http = require('http').Server(app);
 var opts = {
     transports: [
         'websocket',
-        'xhr-polling',
-        'jsonp-polling'
+        //'xhr-polling',
+        //'jsonp-polling'
     ]
     //,log: true
     //,origins: '*:*'
