@@ -1,0 +1,28 @@
+{
+  "name": "static",
+  "authors": [
+    "Eric Miller <epmiller8464@gmail.com>"
+  ],
+  "description": "",
+  "main": "index.html",
+  "moduleType": [],
+  "license": "MIT",
+  "homepage": "",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "adapter.js": "v0.2.9",
+    "bootstrap": "*",
+    "ekko-lightbox": "*",
+    "demo-console": "master",
+    "kurento-client": "^6.4.0",
+    "kurento-utils": "^6.2.0",
+    "kurento-jsonrpc": "^5.1.1"
+  }
+}
