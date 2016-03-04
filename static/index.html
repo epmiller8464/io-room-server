@@ -103,14 +103,16 @@
 //        var socket = new WebSocket('ws://' + location.host);
         var socket = io('ws://' + location.host);
         socket.on('connect', function () {
+            console.log(socket)
             console.log('connected to socket')
-            socket.on('joined-channel', function (data) {
-                console.log(data)
-            })
-            socket.emit('new-channel', {my: 'clientxyz'});
-
+            socket.emit('new-channel', {from: 'clientxyz', sid: socket.id});
+//
         });
 //        socket.on('event', function (data) {
+        socket.on('joined-channel', function (data) {
+            console.log('Joined response')
+            console.log(data)
+        })
 //            console.log('connected to socket')
 //        });
         socket.on('disconnect', function () {

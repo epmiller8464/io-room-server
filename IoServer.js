@@ -11,6 +11,7 @@ var Room = require('./lib/Room')
 module.exports = IoServer;
 
 function IoServer(http) {
+    console.log('connecting socket.io')
     var opts = {
         transports: [
             'websocket',// 'disconnect' EVENT will work only with 'websocket'
@@ -27,7 +28,7 @@ function IoServer(http) {
     var listOfBroadcasts = {}
 
     io.on('connection', function (socket) {
-        console.log('a user connected');
+        console.log('a user connected %s', socket.id);
         var initiatorChannel = '';
         if (!io.isConnected) {
             io.isConnected = true;
@@ -35,8 +36,8 @@ function IoServer(http) {
 
         socket.on('new-channel', function (data) {
             console.log(data)
-            onNewNamespace(data.channel, data.sender);
-            //socket.emit('joined-channel', data);
+          //  onNewNamespace(data.channel, data.from);
+            socket.emit('joined-channel', data);
         });
 
         socket.on('join-channel', function (data) {
@@ -61,12 +62,13 @@ function IoServer(http) {
             }
         });
     });
-    function onNewNamespace(channel, sender) {
+    function onNewNamespace(channel, from) {
 
         var nsp = io.of('/' + channel)
         var room = new Room(channel, nsp, {})
 
-        room.onConnect = function(){}
+        room.onConnect = function () {
+        }
 
         nsp.on('connection', function (socket) {
             var username;
@@ -76,8 +78,8 @@ function IoServer(http) {
             }
 
             socket.on('message', function (data) {
-                if (data.sender == sender) {
-                    if (!username) username = data.data.sender;
+                if (data.from === from) {
+                    if (!username) username = data.data.from;
 
                     socket.broadcast.emit('message', data.data);
                 }

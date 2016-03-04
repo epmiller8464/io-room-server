@@ -19,78 +19,21 @@ var opts = {
     log: true,
     origins: '*:*'
 };
-var sio = require('socket.io')
+//var sio = require('socket.io')
 //var io = require('socket.io')(http,opts);
-var io = sio(http, opts)
+//var io = sio(http, opts)
 
 app.get('/', function (req, res) {
     res.sendFile(__dirname + '/static/index.html');
 });
 
+require('./IoServer')(http)
+
 http.listen(3000, function () {
     console.log('listening on *:3000');
 });
 app.use(express.static(path.join(__dirname, 'static')));
-var channels = {}
-io.on('connection', function (socket) {
-    console.log('a user connected');
-    var initiatorChannel = '';
-    if (!io.isConnected) {
-        io.isConnected = true;
-    }
 
-    socket.on('new-channel', function (data) {
-        console.log(data)
-        if (!channels[data.channel]) {
-            initiatorChannel = data.channel;
-        }
-
-        channels[data.channel] = data.channel;
-        onNewNamespace(data.channel, data.sender);
-        data.joined = true
-        socket.emit('joined-channel', data);
-    });
-
-    socket.on('presence', function (channel) {
-        var isChannelPresent = !!channels[channel];
-        socket.emit('presence', isChannelPresent);
-    });
-    socket.on('message', function (channel) {
-        if (initiatorChannel) {
-            delete channels[initiatorChannel];
-        }
-    });
-    socket.on('disconnect', function (channel) {
-        if (initiatorChannel) {
-            delete channels[initiatorChannel];
-        }
-    });
-});
-
-function onNewNamespace(channel, sender) {
-    io.of('/' + channel).on('connection', function (socket) {
-        var username;
-        if (io.isConnected) {
-            io.isConnected = false;
-            socket.emit('connect', true);
-        }
-
-        socket.on('message', function (data) {
-            if (data.sender == sender) {
-                if (!username) username = data.data.sender;
-
-                socket.broadcast.emit('message', data.data);
-            }
-        });
-
-        socket.on('disconnect', function () {
-            if (username) {
-                socket.broadcast.emit('user-left', username);
-                username = null;
-            }
-        });
-    });
-}
 
 ////var express = require('express');
 ////var io = require('socket.io')
