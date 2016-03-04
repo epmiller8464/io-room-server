@@ -12,9 +12,9 @@ var http = require('http').Server(app);
 var opts = {
     transports: [
         'websocket',
-        'polling',
-        'xhr-polling',
-        'jsonp-polling'
+        'polling'
+        //'xhr-polling',
+        //'jsonp-polling'
     ],
     log: true,
     origins: '*:*'
@@ -41,12 +41,12 @@ io.on('connection', function (socket) {
 
     socket.on('new-channel', function (data) {
         console.log(data)
-        //if (!channels[data.channel]) {
-        //    initiatorChannel = data.channel;
-        //}
-        //
-        //channels[data.channel] = data.channel;
-        //onNewNamespace(data.channel, data.sender);
+        if (!channels[data.channel]) {
+            initiatorChannel = data.channel;
+        }
+
+        channels[data.channel] = data.channel;
+        onNewNamespace(data.channel, data.sender);
         data.joined = true
         socket.emit('joined-channel', data);
     });
