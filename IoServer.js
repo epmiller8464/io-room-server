@@ -7,7 +7,7 @@ var util = require('util');
 var url = require('url');
 var sio = require('socket.io');
 
-
+var Room = require('./lib/Room')
 module.exports = IoServer;
 
 function IoServer(http) {
@@ -23,7 +23,7 @@ function IoServer(http) {
     };
     var io = sio(http, opts)
 
-    var channels = {}
+    var rooms = {}
     var listOfBroadcasts = {}
 
     io.on('connection', function (socket) {
@@ -35,43 +35,40 @@ function IoServer(http) {
 
         socket.on('new-channel', function (data) {
             console.log(data)
-            if (!channels[data.channel]) {
-                initiatorChannel = data.channel;
-            }
-
-            channels[data.channel] = data.channel;
             onNewNamespace(data.channel, data.sender);
-            data.joined = true
-            socket.emit('joined-channel', data);
+            //socket.emit('joined-channel', data);
         });
+
         socket.on('join-channel', function (data) {
             console.log('join-channel: %s', data)
-            if (!channels[data.channel]) {
-                initiatorChannel = data.channel;
-            }
-
-            channels[data.channel] = data.channel;
-            onNewNamespace(data.channel, data.sender);
-            data.joined = true
             socket.emit('joined-channel', data);
         });
+
         socket.on('presence', function (channel) {
-            var isChannelPresent = !!channels[channel];
+            var isChannelPresent = !!rooms[channel];
             socket.emit('presence', isChannelPresent);
         });
+
         socket.on('message', function (channel) {
             if (initiatorChannel) {
-                delete channels[initiatorChannel];
+                delete rooms[initiatorChannel];
             }
         });
+
         socket.on('disconnect', function (channel) {
             if (initiatorChannel) {
-                delete channels[initiatorChannel];
+                delete rooms[initiatorChannel];
             }
         });
     });
     function onNewNamespace(channel, sender) {
-        io.of('/' + channel).on('connection', function (socket) {
+
+        var nsp = io.of('/' + channel)
+        var room = new Room(channel, nsp, {})
+
+        room.onConnect = function(){}
+
+        nsp.on('connection', function (socket) {
             var username;
             if (io.isConnected) {
                 io.isConnected = false;
