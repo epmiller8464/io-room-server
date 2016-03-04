@@ -100,14 +100,30 @@
 //            room = kurento.Room(roomOptions)
 //        })
         console.log(location.host)
-        var socket = io('http://' + location.host);
-//        socket.on('connect', function(){});
-//        socket.on('event', function(data){});
-//        socket.on('disconnect', function(){});
+//        var socket = new WebSocket('ws://' + location.host);
+        var socket = io('ws://' + location.host);
+        socket.on('connect', function () {
+            console.log('connected to socket')
+            socket.on('joined-channel', function (data) {
+                console.log(data)
+            })
+            socket.emit('new-channel', {my: 'clientxyz'});
+
+        });
+//        socket.on('event', function (data) {
+//            console.log('connected to socket')
+//        });
+        socket.on('disconnect', function () {
+            console.log('disconnect from socket')
+        });
         socket.on('open', function () {
+            console.log('open to socket')
             socket.on('message', function (data) {
+                console.log('message on socket')
+
             });
             socket.on('close', function () {
+                console.log('socket closed')
             });
         });
     })
