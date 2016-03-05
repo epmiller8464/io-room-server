@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="bower_components/demo-console/index.css">
     <link rel="stylesheet" href="bower_components/ekko-lightbox/dist/ekko-lightbox.min.css">
     <link rel="stylesheet" href="css/kurento.css">
-    <script src="bower_components/adapter.js/adapter.js"></script>
+    <script src="./bower_components/adapter.js/adapter.js"></script>
     <script src="bower_components/jquery/dist/jquery.min.js"></script>
     <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="bower_components/demo-console/index.js"></script>
@@ -37,46 +37,12 @@
                     <a id="joinRoom" href="#" class="btn btn-success">
                         joinRoom
                     </a>
-                    <a id="participantJoined" href="#" class="btn btn-primary">
-                        participantJoined
+                    <a id="signal" href="#" class="btn btn-success">
+                        signal
                     </a>
-                    <a id="publishVideo" href="#" class="btn btn-primary">
-                        publishVideo
+                    <a id="join" href="#" class="btn btn-success">
+                        join
                     </a>
-                    <a id="participantPublished" href="#" class="btn btn-danger">
-                        participantPublished
-                    </a>
-                    <a id="unpublishVideo" href="#" class="btn btn-danger">
-                        unpublishVideo
-                    </a>
-                    <a id="participantUnpublished" href="#" class="btn btn-danger">
-                        participantUnpublished
-                    </a>
-                    <a id="receiveVideoFrom" href="#" class="btn btn-danger">
-                        participantUnpublished
-                    </a>
-                    <a id="onIceCandidate" href="#" class="btn btn-danger">
-                        onIceCandidate
-                    </a>
-                    <a id="iceCandidate" href="#" class="btn btn-danger">
-                        iceCandidate
-                    </a>
-                    <a id="leaveRoom" href="#" class="btn btn-danger">
-                        leaveRoom
-                    </a>
-                    <a id="participantLeft" href="#" class="btn btn-danger">
-                        participantLeft
-                    </a>
-                    <a id="sendMessage" href="#" class="btn btn-danger">
-                        sendMessage
-                    </a>
-                    <a id="mediaError" href="#" class="btn btn-danger">
-                        mediaError
-                    </a>
-                    <a id="customRequest" href="#" class="btn btn-danger">
-                        customRequest
-                    </a>
-
                 </div>
             </div>
             <div class="row">
@@ -94,44 +60,41 @@
     //    var room, roomName = 'testRoom', userName = 'testUser', kurento = undefined;
     //    var roomOptions = {room: roomName, user: userName}
     //    var io = require('socket.io')
-    $(document).ready(function () {
-//        KurentoRoom('ws://' + location.host + '/r', function (error, _kurento) {
-//            kurento = _kurento
-//            room = kurento.Room(roomOptions)
-//        })
-        console.log(location.host)
+    //    $(document).ready(function () {
+    var path = '/'//ws://' + location.host
+    console.log(path)
+    var room = 'roomname'//location.pathname
+    var sender = Math.round(Math.random() * 999999999) + 999999999;
+    var socket;
+    io(path).emit('new-channel', {sender: sender, channel: room});
+    $('#joinRoom').click(function () {
 //        var socket = new WebSocket('ws://' + location.host);
-        var socket = io('ws://' + location.host);
-        socket.on('connect', function () {
-            console.log(socket)
-            console.log('connected to socket')
-            socket.emit('new-channel', {from: 'clientxyz', sid: socket.id});
-//
-        });
-//        socket.on('event', function (data) {
-        socket.on('joined-channel', function (data) {
-            console.log('Joined response')
-            console.log(data)
-        })
-//            console.log('connected to socket')
-//        });
-        socket.on('disconnect', function () {
-            console.log('disconnect from socket')
-        });
-        socket.on('open', function () {
-            console.log('open to socket')
-            socket.on('message', function (data) {
-                console.log('message on socket')
+        socket = io(path + room);
+        socket.channel = room;
+        socket.on('connect', function (s) {
+//            console.log(socket)
+            console.log('connected %s to room %s', sender, room)
+//        room
+            socket.emit('message', {username: 'eric', live: true})
+            //        socket.on('event', function (data) {
+            socket.on('room-joined', function (data) {
+                console.log('Joined response')
+                console.log(data)
+            })
+            socket.on('message', function (m) {
+                console.log('message')
+                console.log(m)
+            });
 
-            });
-            socket.on('close', function () {
-                console.log('socket closed')
+            socket.on('user-left', function () {
+                console.log('disconnect from socket')
             });
         });
-    })
-    //    $('#joinRoom').click(function () {
-    //        room.connect()
-    //    })
+
+        $('#signal').click(function () {
+            socket.emit('signaling', {})
+        })
+    });
 
 </script>
 

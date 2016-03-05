@@ -29,69 +29,70 @@ function IoServer(http) {
 
     io.on('connection', function (socket) {
         console.log('a user connected %s', socket.id);
-        var initiatorChannel = '';
+        //console.log('%s', util.inspect(socket));
+        //var initiatorChannel = '';
         if (!io.isConnected) {
             io.isConnected = true;
         }
 
         socket.on('new-channel', function (data) {
             console.log(data)
-          //  onNewNamespace(data.channel, data.from);
-            socket.emit('joined-channel', data);
-        });
-
-        socket.on('join-channel', function (data) {
-            console.log('join-channel: %s', data)
-            socket.emit('joined-channel', data);
-        });
-
-        socket.on('presence', function (channel) {
-            var isChannelPresent = !!rooms[channel];
-            socket.emit('presence', isChannelPresent);
-        });
-
-        socket.on('message', function (channel) {
-            if (initiatorChannel) {
-                delete rooms[initiatorChannel];
-            }
+            onNewNamespace(data.channel, data.sender);
+            //socket.emit('joined-channel', data);
         });
 
         socket.on('disconnect', function (channel) {
-            if (initiatorChannel) {
-                delete rooms[initiatorChannel];
+            //if (!channel) {
+            //
+            //     delete rooms[initiatorChannel];
+            //}
+        });
+
+        socket.on('join-room', function (data) {
+            console.log('join-channel: %s', data)
+            //socket.emit('channel-joined', data);
+        });
+
+        //socket.on('presence', function (channel) {
+        //    var isChannelPresent = !!rooms[channel];
+        //    socket.emit('presence', isChannelPresent);
+        //});
+
+        socket.on('message', function (channel) {
+            if (channel) {
+                delete rooms[channel];
             }
         });
     });
-    function onNewNamespace(channel, from) {
-
-        var nsp = io.of('/' + channel)
-        var room = new Room(channel, nsp, {})
-
-        room.onConnect = function () {
+    function onNewNamespace(channel, sender) {
+        var room = rooms[channel]
+        if (!room) {
+            room = new Room(io, {channel: channel, publisher: sender})
+            rooms[channel] = room
         }
 
-        nsp.on('connection', function (socket) {
-            var username;
-            if (io.isConnected) {
-                io.isConnected = false;
-                socket.emit('connect', true);
-            }
-
-            socket.on('message', function (data) {
-                if (data.from === from) {
-                    if (!username) username = data.data.from;
-
-                    socket.broadcast.emit('message', data.data);
-                }
-            });
-
-            socket.on('disconnect', function () {
-                if (username) {
-                    socket.broadcast.emit('user-left', username);
-                    username = null;
-                }
-            });
-        });
+        //nsp.on('connection', function (socket) {
+        //    var username;
+        //    if (io.isConnected) {
+        //        io.isConnected = false;
+        //        socket.emit('connect', true);
+        //    }
+        //
+        //    socket.on('message', function (data) {
+        //        if (data.from === from) {
+        //            if (!username) username = data.data.from;
+        //
+        //            socket.broadcast.emit('message', data.data);
+        //        }
+        //    });
+        //
+        //    socket.on('disconnect', function () {
+        //        if (username) {
+        //            socket.broadcast.emit('user-left', username);
+        //            username = null;
+        //        }
+        //    });
+        //});
     }
 }
 
