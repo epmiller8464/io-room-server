@@ -26,23 +26,13 @@
 </head>
 <body>
 
-<div class="container-fluid">
+<div class="container">
     <div class="row">
         <div class="col-md-1" style="margin-bottom: 20px;">
             <a id="joinRoom" href="#" class="btn btn-success">
                 joinRoom
             </a>
         </div>
-        <!--<div class="col-md-2" data-webrtc-presenterId="1">-->
-        <!--<div id="mc" class="row">-->
-        <!--<div id="console" class="console democonsole">-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--<div class="row">-->
-        <!--<input type="text" class="input-lg ">-->
-        <!--<a id="" href="#">send</a>-->
-        <!--</div>-->
-        <!--</div>-->
     </div>
     <div id="viewers" class="row">
     </div>
@@ -57,17 +47,21 @@
         this.socket = io('/' + opts.room);
         this.room = this.socket.channel = opts.room;
         this.id = opts.id
-        this.console = new Console(null, opts);
         init()
         function init() {
             var container = $('#viewers');
             container.append(textControl(self.id))
-            $('#' + index).click(function () {
+            $('#' + self.id).click(function () {
                 // alert($(this).attr('id'))
+                self.console.log('#txt_' + self.id)
                 var text = $('#txt_' + self.id)
-                self.socket.emit('message', {data: text.val()})
+//                self.console.log(text.val())
+                if (text)
+                    self.socket.emit('message', {data: text.val()})
 
             });
+
+            self.console = new Console(null, opts);
 
             self.socket.on('connect', function (s) {
                 //            console.log(socket)
@@ -80,8 +74,9 @@
                     console.log(data)
                 });
                 self.socket.on('message', function (m) {
+                    self.console.log(m)
                     console.log('message')
-                    console.log(m)
+//                    console.log(m)
                 });
 
                 self.socket.on('user-left', function () {
@@ -94,15 +89,18 @@
 
         }
     }
+
     //        var io = require('socket.io')
     var path = '/'//ws://' + location.host
-    var room = location.pathname.replace('/', '')
+    var room = location.pathname.replace('/', '').replace('#', '')
+    room = room.replace(/\/|:|#|%|\.|\[|\]/g, '');
     console.log(room)
     var sender = Math.round(Math.random() * 999999999) + 999999999;
     //    var socket;
     var index = 0;
     var clients = []
-    $('#joinRoom').click(function () {
+    $('#joinRoom').click(function (evt) {
+        evt.preventDefault()
         var c = new SocketClient({room: room, id: index})
         clients.push(c)
         index++;
@@ -117,7 +115,9 @@
                 '</div>' +
                 '<div class="row">' +
                 '<textarea type="text" id="txt_' + id + '" class="input-lg "/>' +
-                '<a id="' + id + '" href="#">send</a>' +
+                '<div class="row">' +
+                '<a id="' + id + '" href="#" class="btn btn-success">send</a>' +
+                '</div>' +
                 '</div>' +
                 '</div>'
     }
