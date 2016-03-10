@@ -91,10 +91,10 @@
 
     //        var io = require('socket.io')
     var path = '/'//ws://' + location.host
-//    io()
+    //    io()
     var room = location.pathname.replace('/', '').replace('#', '')
     room = room.replace(/\/|:|#|%|\.|\[|\]/g, '');
-    io('ws://' + location.host).emit('new-channel', { channel: room});
+    io('ws://' + location.host).emit('new-channel', {channel: room});
 
     console.log(room)
     var sender = Math.round(Math.random() * 999999999) + 999999999;
@@ -111,7 +111,7 @@
     function textControl(id) {
         return '<div class="col-md-2" data-webrtc-presenterId="' + id + '">' +
                 '<div class="row">' +
-                '<div id="console_' + id + '" class="console democonsole">' +
+                '<div id="console_' + id + '" class="console democonsole" style="height:150px;">' +
                 ' <ul id="console_list_' + id + '"></ul>' +
                 '</div>' +
                 '</div>' +

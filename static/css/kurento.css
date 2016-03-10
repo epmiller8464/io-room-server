@@ -42,7 +42,8 @@ video,.console {
 
 .console {
 	min-height: 120px;
-	max-height: 180px;
+	/*max-height: 185px;*/
+	height: 120px;
 }
 
 #videoContainer {
