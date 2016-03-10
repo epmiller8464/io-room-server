@@ -14,8 +14,8 @@ function IoServer(http) {
     console.log('connecting socket.io')
     var opts = {
         transports: [
+            'polling',
             'websocket',// 'disconnect' EVENT will work only with 'websocket'
-            'polling'
             //'xhr-polling',
             //'jsonp-polling'
         ],

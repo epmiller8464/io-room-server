@@ -94,7 +94,7 @@
 //    io()
     var room = location.pathname.replace('/', '').replace('#', '')
     room = room.replace(/\/|:|#|%|\.|\[|\]/g, '');
-    io('/').emit('new-channel', { channel: room});
+    io('ws://' + location.host).emit('new-channel', { channel: room});
 
     console.log(room)
     var sender = Math.round(Math.random() * 999999999) + 999999999;
