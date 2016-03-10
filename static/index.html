@@ -40,10 +40,9 @@
 <script src="./js/socket.io.js"></script>
 <script>
     console.log('test')
+
     function SocketClient(opts) {
         var self = this
-        io(path).emit('new-channel', {sender: opts.id, channel: opts.room});
-
         this.socket = io('/' + opts.room);
         this.room = this.socket.channel = opts.room;
         this.id = opts.id
@@ -92,8 +91,11 @@
 
     //        var io = require('socket.io')
     var path = '/'//ws://' + location.host
+//    io()
     var room = location.pathname.replace('/', '').replace('#', '')
     room = room.replace(/\/|:|#|%|\.|\[|\]/g, '');
+    io('/').emit('new-channel', { channel: room});
+
     console.log(room)
     var sender = Math.round(Math.random() * 999999999) + 999999999;
     //    var socket;
