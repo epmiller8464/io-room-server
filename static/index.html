@@ -16,6 +16,7 @@
     <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="bower_components/demo-console/index.js"></script>
     <script src="bower_components/ekko-lightbox/dist/ekko-lightbox.min.js"></script>
+    <script src="bower_components/demo-console/index.js"></script>
     <script src="bower_components/kurento-utils/js/kurento-utils.js"></script>
     <script src="bower_components/kurento-utils/js/kurento-utils.js"></script>
     <script src="bower_components/kurento-jsonrpc/js/kurento-jsonrpc.js"></script>
@@ -24,77 +25,96 @@
     <title>Kurento Tutorial 3: Video Call 1 to N with WebRTC</title>
 </head>
 <body>
-<p>test</p>
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-3" data-webrtc-presenterId="1">
-            <div class="row">
-                <!--<div class="videoSmall pull-left">-->
-                <!--<video id="video_1" autoplay width="240px" height="180px" poster="img/webrtc.png"></video>-->
-                <!--</div>-->
-                <div class="col-md-4 pull-right">
-                    <a id="joinRoom" href="#" class="btn btn-success">
-                        joinRoom
-                    </a>
-                    <a id="signal" href="#" class="btn btn-success">
-                        signal
-                    </a>
-                    <a id="join" href="#" class="btn btn-success">
-                        join
-                    </a>
-                </div>
-            </div>
-            <div class="row">
-                <div id="console_1" class="console democonsole">
-                    <ul id="console_list_1"></ul>
-                </div>
-            </div>
+        <div class="col-md-1" style="margin-bottom: 20px;">
+            <a id="joinRoom" href="#" class="btn btn-success">
+                joinRoom
+            </a>
         </div>
+        <!--<div class="col-md-2" data-webrtc-presenterId="1">-->
+        <!--<div id="mc" class="row">-->
+        <!--<div id="console" class="console democonsole">-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--<div class="row">-->
+        <!--<input type="text" class="input-lg ">-->
+        <!--<a id="" href="#">send</a>-->
+        <!--</div>-->
+        <!--</div>-->
     </div>
     <div id="viewers" class="row">
     </div>
 </div>
 <script src="./js/socket.io.js"></script>
 <script>
-    //    var room, roomName = 'testRoom', userName = 'testUser', kurento = undefined;
-    //    var roomOptions = {room: roomName, user: userName}
-    //    var io = require('socket.io')
-    //    $(document).ready(function () {
+    console.log('test')
+    function SocketClient(opts) {
+        var self = this
+        io(path).emit('new-channel', {sender: opts.id, channel: opts.room});
+
+        this.socket = io('/' + opts.room);
+        this.room = this.socket.channel = opts.room;
+        this.id = opts.id
+        this.console = new Console(null, opts);
+        init()
+        function init() {
+            var container = $('#viewers');
+            container.append(textControl(self.id))
+            $('#' + index).click(function () {
+                alert($(this).attr('id'))
+
+            });
+
+            self.socket.on('connect', function (s) {
+                //            console.log(socket)
+                console.log('connected ' + self.id + ' to room ' + self.room)
+                //        room
+                self.socket.emit('message', {username: 'eric', live: true})
+                //        socket.on('event', function (data) {
+                self.socket.on('room-joined', function (data) {
+                    console.log('Joined response')
+                    console.log(data)
+                });
+                self.socket.on('message', function (m) {
+                    console.log('message')
+                    console.log(m)
+                });
+
+                self.socket.on('user-left', function () {
+                    console.log('disconnect from socket')
+                });
+            });
+        }
+    }
+    //        var io = require('socket.io')
     var path = '/'//ws://' + location.host
-    console.log(path)
-    var room = 'roomname'//location.pathname
+    var room = location.pathname.replace('/', '')
+    console.log(room)
     var sender = Math.round(Math.random() * 999999999) + 999999999;
-    var socket;
-    io(path).emit('new-channel', {sender: sender, channel: room});
+    //    var socket;
+    var index = 0;
+    var clients = []
     $('#joinRoom').click(function () {
-//        var socket = new WebSocket('ws://' + location.host);
-        socket = io(path + room);
-        socket.channel = room;
-        socket.on('connect', function (s) {
-//            console.log(socket)
-            console.log('connected %s to room %s', sender, room)
-//        room
-            socket.emit('message', {username: 'eric', live: true})
-            //        socket.on('event', function (data) {
-            socket.on('room-joined', function (data) {
-                console.log('Joined response')
-                console.log(data)
-            })
-            socket.on('message', function (m) {
-                console.log('message')
-                console.log(m)
-            });
-
-            socket.on('user-left', function () {
-                console.log('disconnect from socket')
-            });
-        });
-
-        $('#signal').click(function () {
-            socket.emit('signaling', {})
-        })
+        var c = new SocketClient({room: room, id: index})
+        clients.push(c)
+        index++;
     });
+
+    function textControl(id) {
+        return '<div class="col-md-2" data-webrtc-presenterId="' + id + '">' +
+                '<div class="row">' +
+                '<div id="console_' + id + '" class="console democonsole">' +
+                ' <ul id="console_list_' + id + '"></ul>' +
+                '</div>' +
+                '</div>' +
+                '<div class="row">' +
+                '<textarea type="text" id="txt_' + id + '" class="input-lg "/>' +
+                '<a id="' + id + '" href="#">send</a>' +
+                '</div>' +
+                '</div>'
+    }
 
 </script>
 
