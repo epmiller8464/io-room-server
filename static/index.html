@@ -63,7 +63,9 @@
             var container = $('#viewers');
             container.append(textControl(self.id))
             $('#' + index).click(function () {
-                alert($(this).attr('id'))
+                // alert($(this).attr('id'))
+                var text = $('#txt_' + self.id)
+                self.socket.emit('message', {data: text.val()})
 
             });
 
@@ -86,6 +88,10 @@
                     console.log('disconnect from socket')
                 });
             });
+        }
+
+        this.sendMsg = function () {
+
         }
     }
     //        var io = require('socket.io')
