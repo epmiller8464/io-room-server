@@ -12,9 +12,6 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-var routes = require('./routes/index');
-var users = require('./routes/users');
-
 var app = express();
 var http = require('http').Server(app);
 
@@ -42,18 +39,22 @@ app.use(function (err, req, res, next) {
 });
 
 app.use(express.static(path.join(__dirname, 'static')));
-app.use(express.static(path.join(__dirname, 'public')));
 
-app.get('/', function (req, res) {
-    res.sendFile(__dirname + '/static/index.html');
-});
+//app.get('/', function (req, res) {
+//    res.sendFile(__dirname + '/static/index.html');
+    //res.sendFile(path.join(__dirname, 'static/index.html'));
+//});
 
-app.get('/:r', function (req, res) {
-    res.sendFile(__dirname + '/static/index.html');
-});
+//app.get('/:r', function (req, res) {
+//    res.sendFile(__dirname + '/static/index.html');
+    //res.sendFile(path.join(__dirname, 'static/index.html'));
+//});
 
-//app.use('/', routes);
-app.use('/users', users);
+var routes = require('./routes/index');
+var rooms = require('./routes/users');
+app.use('/', routes);
+//app.use('/getAllRooms', users);
+app.use('/r', rooms);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

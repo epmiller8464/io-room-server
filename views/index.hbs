@@ -1,2 +1,99 @@
-<h1>{{title}}</h1>
-<p>Welcome to {{title}}</p>
+<div class="container">
+    <div class="row">
+        <div class="col-md-1" style="margin-bottom: 20px;">
+            <a id="joinRoom" href="#" class="btn btn-success">
+                joinRoom
+            </a>
+        </div>
+    </div>
+    <div id="viewers" class="row">
+    </div>
+</div>
+<script src="/static/js/socket.io.js"></script>
+<script>
+    console.log('test')
+
+    function SocketClient(opts) {
+        var self = this
+        this.socket = io('/' + opts.room);
+        this.room = this.socket.channel = opts.room;
+        this.id = opts.id
+        init()
+        function init() {
+            var container = $('#viewers');
+            container.append(textControl(self.id))
+            $('#' + self.id).click(function () {
+                // alert($(this).attr('id'))
+                self.console.log('#txt_' + self.id)
+                var text = $('#txt_' + self.id)
+//                self.console.log(text.val())
+                if (text)
+                    self.socket.emit('message', {data: text.val()})
+
+            });
+
+            self.console = new Console(null, opts);
+
+            self.socket.on('connect', function (s) {
+                //            console.log(socket)
+                console.log('connected ' + self.id + ' to room ' + self.room)
+                //        room
+                self.socket.emit('message', {username: 'eric', live: true})
+                //        socket.on('event', function (data) {
+                self.socket.on('room-joined', function (data) {
+                    console.log('Joined response')
+                    console.log(data)
+                });
+                self.socket.on('message', function (m) {
+                    self.console.log(m)
+                    console.log('message')
+//                    console.log(m)
+                });
+
+                self.socket.on('user-left', function () {
+                    console.log('disconnect from socket')
+                });
+            });
+        }
+
+        this.sendMsg = function () {
+
+        }
+    }
+
+    //        var io = require('socket.io')
+    var path = '/'//ws://' + location.host
+    //    io()
+    var room = location.pathname.replace('/', '').replace('#', '')
+    room = room.replace(/\/|:|#|%|\.|\[|\]/g, '');
+    io('ws://' + location.host).emit('new-channel', {channel: room});
+
+    console.log(room)
+    var sender = Math.round(Math.random() * 999999999) + 999999999;
+    //    var socket;
+    var index = 0;
+    var clients = []
+    $('#joinRoom').click(function (evt) {
+        evt.preventDefault()
+        var c = new SocketClient({room: room, id: index})
+        clients.push(c)
+        index++;
+    });
+
+    function textControl(id) {
+        return '<div class="col-md-2" data-webrtc-presenterId="' + id + '">' +
+                '<div class="row">' +
+                '<div id="console_' + id + '" class="console democonsole" style="height:150px;">' +
+                ' <ul id="console_list_' + id + '"></ul>' +
+                '</div>' +
+                '</div>' +
+                '<div class="row">' +
+                '<textarea type="text" id="txt_' + id + '" class="input-lg "/>' +
+                '<div class="row">' +
+                '<a id="' + id + '" href="#" class="btn btn-success">send</a>' +
+                '</div>' +
+                '</div>' +
+                '</div>'
+    }
+
+</script>
