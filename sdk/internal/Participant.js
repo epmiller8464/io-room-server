@@ -330,7 +330,7 @@ Participant.prototype.addIceCandidate = function (endpointName, iceCandidate) {
     var self = this
     var publisher = self._name === endpointName ? self.getPublisher() : self.getNewOrExistingSubscriber(endpointName)
 
-    publisher.addIceCandidate(iceCandidate)
+    broadcaster.addIceCandidate(iceCandidate)
 }
 Participant.prototype.sendIceCandidate = function (endpointName, iceCandidate) {
     var self = this

@@ -330,7 +330,7 @@ NotificationRoomHandler.prototype.onParticipantEvicted = function (participant) 
  * @param participantId identifier of the participant
  * @param errorDescription description of the error
  */
-NotificationRoomHandler.prototype.onIceCandidate = function (roomName, participantId, endPointName, candidate) {
+NotificationRoomHandler.prototype.iceCandidate = function (roomName, participantId, endPointName, candidate) {
     var self = this
     var params = {}
     params[ProtocolElement.ICECANDIDATE_EPNAME_PARAM] = endPointName

@@ -45,9 +45,9 @@ SubscriberEndpoint.prototype.subscribe = function (sdpOffer, publisher, cb) {
 
         try {
             self.gatherCandidates()
-            publisher.connect(self.getEndpoint())
+            broadcaster.connect(self.getEndpoint())
             self.setConnectedToPublisher(true)
-            self.setPublisher(publisher)
+            self.setPublisher(broadcaster)
             return cb(null, sdpAnswer)
         } catch (roomError) {
             console.log(roomError)
@@ -71,7 +71,7 @@ SubscriberEndpoint.prototype.getPublisher = function () {
 }
 SubscriberEndpoint.prototype.setPublisher = function (publisher) {
     var self = this
-    self._publisher = publisher
+    self._publisher = broadcaster
 }
 
 SubscriberEndpoint.prototype.mute = function (muteType) {

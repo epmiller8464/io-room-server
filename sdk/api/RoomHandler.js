@@ -16,7 +16,7 @@ function RoomHandler() {
  */
 
 
-RoomHandler.prototype.onIceCandidate = function onIceCandidate(roomName, participantId, endPointName, candidate) {
+RoomHandler.prototype.iceCandidate = function onIceCandidate(roomName, participantId, endPointName, candidate) {
 };
 
 RoomHandler.prototype.onMediaElementError = function onMediaElementError(roomName, participantId, errorDescription) {

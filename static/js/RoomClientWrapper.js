@@ -35,7 +35,7 @@ var WebRtcTestClient = (function () {
         var options = {
           localVideo: self.video,
           onicecandidate: function(candidate){
-            self.onIceCandidate(candidate);
+            self.iceCandidate(candidate);
           }
         };
 
@@ -64,7 +64,7 @@ var WebRtcTestClient = (function () {
         var options = {
           remoteVideo: self.video,
           onicecandidate: function(candidate){
-            self.onIceCandidate(candidate);
+            self.iceCandidate(candidate);
           }
         };
 
@@ -145,7 +145,7 @@ var WebRtcTestClient = (function () {
     }
   };
 
-  WebRtcTestClient.prototype.onIceCandidate = function (candidate) {
+  WebRtcTestClient.prototype.iceCandidate = function (candidate) {
     var self = this;
     //self.webRtcPeer.addIceCandidate(parsedMessage.candidate)
 //  var self = this;

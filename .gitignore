@@ -7,3 +7,13 @@
 out
 gen
 # Created by .ignore support plugin (hsz.mobi)
+README.MD
+example.js
+node_modules/
+rooms.db/
+static/bower_components/
+static/js/bundle.js
+usj.csr
+usj.key
+usj.key.org
+usjfinal.crt

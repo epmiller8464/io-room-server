@@ -23,6 +23,7 @@
     "demo-console": "master",
     "kurento-client": "^6.4.0",
     "kurento-utils": "^6.2.0",
-    "kurento-jsonrpc": "^5.1.1"
+    "kurento-jsonrpc": "^5.1.1",
+    "requirejs": "^2.2.0"
   }
 }

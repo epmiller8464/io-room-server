@@ -49,7 +49,7 @@ function Room(roomName, kurentoClient, roomHandler, destroyKurentoClient) {
     this.on('evictParticipant', self.roomHandler.onParticipantEvicted)
 
     //RoomHandler:
-    this.on('gatheredICECandidate', self.roomHandler.onIceCandidate)
+    this.on('gatheredICECandidate', self.roomHandler.iceCandidate)
     this.on('pipelineError', self.roomHandler.onPipelineError)
     this.on('mediaError', self.roomHandler.onMediaElementError)
 }
@@ -299,7 +299,7 @@ Room.prototype.closePipeline = function (callback) {
 
 Room.prototype.sendIceCandidate = function (pid, endpointName, candidate) {
     var self = this
-    self.roomHandler.onIceCandidate(self.name, pid, endpointName, candidate)
+    self.roomHandler.iceCandidate(self.name, pid, endpointName, candidate)
 }
 
 Room.prototype.sendMediaError = function (pid, description) {

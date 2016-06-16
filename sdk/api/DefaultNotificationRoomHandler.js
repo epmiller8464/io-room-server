@@ -184,7 +184,7 @@ DefaultNotificationRoomHandler.prototype.onParticipantEvicted = function onParti
 }
 
 
-DefaultNotificationRoomHandler.prototype.onIceCandidate = function onIceCandidate(roomName, participantId, endPointName, candidate) {
+DefaultNotificationRoomHandler.prototype.iceCandidate = function onIceCandidate(roomName, participantId, endPointName, candidate) {
 };
 
 DefaultNotificationRoomHandler.prototype.onMediaElementError = function onMediaElementError(roomName, participantId, errorDescription) {

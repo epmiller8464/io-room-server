@@ -205,11 +205,11 @@ RoomManager.prototype.unsubscribe = function (remoteName, participantId) {
     participant.cancelReceivingMedia(remoteName)
 }
 
-RoomManager.prototype.onIceCandidate = function (endpointName,
-                                                 candidate,
-                                                 sdpMLineIndex,
-                                                 sdpMid,
-                                                 participantId) {
+RoomManager.prototype.iceCandidate = function (endpointName,
+                                               candidate,
+                                               sdpMLineIndex,
+                                               sdpMid,
+                                               participantId) {
     var self = this
     console.log('Request [ICE_CANDIDATE] endpoint=%s candidate=%s sdpMLineIdx=%s sdpMid=%s (%s)',
         endpointName, candidate, sdpMLineIndex, sdpMid, participantId)

@@ -162,13 +162,13 @@ NotificationRoomManager.prototype.unsubscribe = function (remoteName, request) {
         self.notificationRoomHandler.onUnsubscribe(request, null);
 
 }
-NotificationRoomManager.prototype.onIceCandidate = function (endpointName, candidate, sdpMLineIndex, sdpMid, request) {
+NotificationRoomManager.prototype.iceCandidate = function (endpointName, candidate, sdpMLineIndex, sdpMid, request) {
     var self = this
     var pid = request.getParticipantId(),
         userName = null
     try {
         userName = self.internalManager.getParticipantName(pid)
-        self.internalManager.onIceCandidate(endpointName, candidate, sdpMLineIndex, sdpMid, pid)
+        self.internalManager.iceCandidate(endpointName, candidate, sdpMLineIndex, sdpMid, pid)
         self.notificationRoomHandler.onRecvIceCandidate(request, null)
     } catch (roomError) {
         console.log('Participant: %s Error receiving ICE candidate (epName=%s, candidate=%s) Error:%s', userName, endpointName, candidate, roomError)
