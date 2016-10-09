@@ -69,6 +69,8 @@ function PeerClient(opts) {
         self.pc.on('signal', function (sdp) {
 
             self.socket.emit('message', {to: data.broadcaster, data: sdp})
+            console.log('signalingState : %s -> iceGatheringState: %s , iceConnectionState: %s, connectionState: %s ', self.pc._pc.signalingState, self.pc._pc.iceGatheringState, self.pc._pc.iceConnectionState, self.pc._pc.connectionState)
+
         })
 
 
@@ -80,8 +82,10 @@ function PeerClient(opts) {
 
             if(stream) {
                 var tracks = stream.getTracks();
-                console.log(tracks[0])
+                console.log(tracks[0].remote)
+                //console.log('signalingState : %s -> iceGatheringState: %s , iceConnectionState: %s, connectionState: %s ', self.pc._pc.signalingState, self.pc._pc.iceGatheringState, self.pc._pc.iceConnectionState, self.pc._pc.connectionState)
                 self.attachRemoteMedia(stream)
+                //self.pc.send('tests')
             }
 
         })
@@ -130,9 +134,13 @@ function PeerClient(opts) {
         })
         self.pc.on('iceConnectionStateChange', function () {
 
-            if(arguments) {
+            console.log('iceConnectionState: %s ', self.pc._pc.iceConnectionState);
 
-            }
+        })
+
+        self.pc.on('signalingStateChange', function () {
+
+            console.log('signalingState : %s ', self.pc._pc.signalingState)
 
         })
 
@@ -174,23 +182,24 @@ function PeerClient(opts) {
 
             var k = data.data.candidate || data.data.type
 
+            self.pc.signal(data.data)
             switch (k) {
                 case "Offer":
                 case "offer":
                     console.log('offer received')
-                    self.pc.signal(data.data)
+                    //self.pc.signal(data.data)
 
                     break;
 
                 case "Answer":
                 case "answer":
                     console.log('answer received')
-                    self.pc.signal(data.data)
+                    //self.pc.signal(data.data)
 
                     break;
                 default:
                     console.log(data.data)
-                    self.pc.signal(data.data)
+                    //self.pc.signal(data.data)
 
                     //self._pendingIce.push(data.data)
                     break;
