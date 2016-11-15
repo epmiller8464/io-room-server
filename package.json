@@ -30,6 +30,8 @@
   },
   "scripts": {
     "sdk-test": "tape ./sdk/test/*.tape.js",
-    "postinstall": "cd static && bower install"
+    "postinstall": "cd static && bower install",
+    "start": "node ./app"
+
   }
 }
