@@ -23,7 +23,8 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 
 app.set('trust proxy', 1)
-app.use(cookieSession({name: 'session', keys: [fs.readFileSync('./usj.key')]}))
+// app.use(cookieSession({name: 'session', keys: [fs.readFileSync('./usj.key')]}))
+app.use(cookieSession({name: 'session', secret: 'io-room-server-secret'}))
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 //app.use(logger('dev'));
