@@ -17,7 +17,8 @@ var rooms = require('./routes/rooms.js');
 var app = express();
 var cookieSession = require('cookie-session')
 var fs = require('fs')
-var http = require('http').Server(app);
+var http = require('http').createServer(app);
+// var server = https.createServer(app);
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
