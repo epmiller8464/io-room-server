@@ -5,7 +5,7 @@ var uuid = require('node-uuid')
 var pino = require('pino')()
 var db = require('./db')
 var Room = require('./lib/Room')
-var User = require('./lib/User')
+var User = require('./lib/user')
 
 var noop = function () {
 }
