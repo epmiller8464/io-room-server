@@ -1,5 +1,5 @@
 {
-  "name": "application-name",
+  "name": "io-room-server",
   "version": "0.0.1",
   "private": true,
   "engines": {
@@ -31,7 +31,7 @@
   "scripts": {
     "sdk-test": "tape ./sdk/test/*.tape.js",
     "postinstall": "cd static && bower install",
-    "start": "node ./app"
+    "start": "node ./app.js"
 
   }
 }

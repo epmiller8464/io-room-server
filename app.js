@@ -136,7 +136,7 @@ function onError(error) {
  */
 
 function onListening() {
-    var addr = server.address();
+    var addr = http.address();
     var bind = typeof addr === 'string'
         ? 'pipe ' + addr
         : 'port ' + addr.port;
